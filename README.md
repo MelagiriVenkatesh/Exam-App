@@ -59,8 +59,8 @@ Next, create a .env file in the backend directory with the following variables:
 PORT=5000
 DB_URL=<your_mongodb_connection_string_here>
 JWT_SECRET=<your_super_strong_jwt_secret_key_here>
-To start the backend server, run:
 ```
+To start the backend server, run:
 Bash
 ```bash
 npm start
