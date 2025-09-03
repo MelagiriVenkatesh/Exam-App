@@ -41,6 +41,8 @@ To run this project locally, please follow these steps:
 - Git
 
 ### **1. Clone the Repository**
+
+Bash
 ```bash
 git clone <your_github_repository_url_here>
 cd <project_folder_name>
@@ -61,6 +63,7 @@ DB_URL=<your_mongodb_connection_string_here>
 JWT_SECRET=<your_super_strong_jwt_secret_key_here>
 ```
 To start the backend server, run:
+
 Bash
 ```bash
 npm start
