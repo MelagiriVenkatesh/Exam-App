@@ -1,0 +1,14 @@
+.homeWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.homeCard {
+  background: var(--card-background);
+  padding: 50px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}

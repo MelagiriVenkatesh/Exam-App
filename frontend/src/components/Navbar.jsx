@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './Navbar.module.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
-
     const handleLogout = () => {
         localStorage.removeItem('token');
         sessionStorage.removeItem('examResult'); 
@@ -11,9 +11,12 @@ const Navbar = () => {
     };
 
     return (
-        <nav>
-            <button onClick={handleLogout}>Logout</button>
-        </nav>
+        <header className={styles.navbar}>
+            <div className={styles.navbarContent}>
+                <span className={styles.brand}>Exam Portal</span>
+                <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+            </div>
+        </header>
     );
 };
 

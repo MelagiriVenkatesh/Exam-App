@@ -1,0 +1,68 @@
+.pageWrapper {
+  padding-bottom: 2rem;
+}
+
+.contentContainer {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.examCard {
+  background-color: var(--card-background);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.questionText {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.option:hover {
+  background-color: #e9eef2;
+}
+
+.option input {
+  margin-right: 12px;
+}
+
+.navigation {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navButton {
+  background-color: #fff;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
