@@ -55,12 +55,12 @@ npm install
 ```
 
 Next, create a .env file in the backend directory with the following variables:
-
+```
 PORT=5000
 DB_URL=<your_mongodb_connection_string_here>
 JWT_SECRET=<your_super_strong_jwt_secret_key_here>
 To start the backend server, run:
-
+```
 Bash
 ```bash
 npm start
@@ -76,11 +76,13 @@ npm install
 ```
 
 Next, create a .env file in the frontend directory. Add the following variables, pointing to your running backend server:
-
+```
 VITE_REGISTER_API_URL=http://localhost:5000/api/auth/register
 VITE_LOGIN_API_URL=http://localhost:5000/api/auth/login
 VITE_EXAM_API_URL=http://localhost:5000/api/questions
 VITE_SUBMIT_API_URL=http://localhost:5000/api/questions/submit
+```
+
 To start the frontend development server, run:
 
 Bash
