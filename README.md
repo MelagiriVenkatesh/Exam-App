@@ -44,13 +44,16 @@ To run this project locally, please follow these steps:
 ```bash
 git clone <your_github_repository_url_here>
 cd <project_folder_name>
-2. Backend Setup
+```
+### **2. Backend Setup**
 Navigate to the backend directory and install the required dependencies.
 
 Bash
-
+```bash
 cd backend
 npm install
+```
+
 Next, create a .env file in the backend directory with the following variables:
 
 PORT=5000
@@ -59,17 +62,19 @@ JWT_SECRET=<your_super_strong_jwt_secret_key_here>
 To start the backend server, run:
 
 Bash
-
+```bash
 npm start
 The server will be running on http://localhost:5000.
-
-3. Frontend Setup
+```
+### **3. Frontend Setup**
 In a new terminal, navigate to the frontend directory and install the required dependencies.
 
 Bash
-
+```bash
 cd frontend
 npm install
+```
+
 Next, create a .env file in the frontend directory. Add the following variables, pointing to your running backend server:
 
 VITE_REGISTER_API_URL=http://localhost:5000/api/auth/register
@@ -79,8 +84,10 @@ VITE_SUBMIT_API_URL=http://localhost:5000/api/questions/submit
 To start the frontend development server, run:
 
 Bash
-
+```bash
 npm run dev
+```
+
 The application will be available at http://localhost:5173 (or another port specified by Vite).
 
 API Testing
