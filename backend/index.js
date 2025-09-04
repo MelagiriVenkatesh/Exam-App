@@ -8,8 +8,12 @@ const questionRouter = require('./questions.js');
 const app = express();
 const port = process.env.PORT;
 
+const corsOptions = {
+    origin: 'https://venkatesh-exam-portal.vercel.app/',
+}
+
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 connectDB();
 
