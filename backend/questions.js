@@ -8,7 +8,7 @@ function authMiddleWare(req, res, next) {
 
     const token = req.header('token');
     if(!token) 
-        return res.status(401).json({message: "token not found"});
+        return res.status(401).json({message: "token not found", token: false});
 
     try {
         const decodedPayload = jwt.verify(token,process.env.JWT_SECRET);
@@ -16,7 +16,7 @@ function authMiddleWare(req, res, next) {
         next();
     }
     catch(error) {
-        res.status(401).json({message: "Token is invalid"});
+        res.status(401).json({message: "Token is invalid", token: false});
     }
 }
 

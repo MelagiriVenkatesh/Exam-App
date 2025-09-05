@@ -6,15 +6,17 @@ import Register from './pages/Register.jsx'
 import Results from './pages/Results.jsx'
 import { Link } from 'react-router-dom';
 import styles from './pages/Home.module.css';
+import axios from 'axios'
+
 
 function Home() {
-  const token = localStorage.getItem('token');
 
+  let flag = isTokenValid();
   return (
     <div className={styles.homeWrapper}>
       <div className={styles.homeCard}>
         <h1>Welcome to the Exam Portal</h1>
-        {token ? (
+        {flag ? (
           <Link to="/exam">
             <button>Start Exam</button>
           </Link>
@@ -25,6 +27,14 @@ function Home() {
     </div>
   );
 }
+
+async function isTokenValid() {
+
+    let isTokenValidUrl = import.meta.env.VITE_TOKEN_API_URL;
+    const response = await axios(isTokenValid);
+    return response.data.token;
+}
+
 
 const App = () => {
   return (

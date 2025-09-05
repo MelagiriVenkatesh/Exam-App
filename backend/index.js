@@ -24,6 +24,22 @@ app.get('/', (req, res) => {
     res.send("Hello World!!!");
 })
 
+app.get('/tokenValid', (req, res) => {
+
+    const token = req.header('token');
+    if(!token) 
+        return res.status(401).json({token: false});
+
+    try {
+        const decodedPayload = jwt.verify(token,process.env.JWT_SECRET);
+        req.user = decodedPayload.user;
+        return res.status(200).json({token: true});
+    }
+    catch(error) {
+        res.status(401).json({token: false});
+    }
+})
+
 app.listen(port, () => {
     console.log(`server running at http://localhost:${port}`);
 });
