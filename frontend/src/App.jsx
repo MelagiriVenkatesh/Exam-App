@@ -30,8 +30,12 @@ function Home() {
 
 async function isTokenValid() {
 
+    let token = localStorage.getItem("token");
+    if(!token)
+      return false;
+
     let isTokenValidUrl = import.meta.env.VITE_TOKEN_API_URL;
-    const response = await axios(isTokenValid);
+    const response = await axios.get(isTokenValid);
     console.log(response);
     return response.data.token;
 }
@@ -41,12 +45,12 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path = '/' element = {<Home/>}/>
-        <Route path = '/login' element = {<Login/>}/>
-        <Route path = '/register' element = {<Register/>}/>
-        <Route path="/exam" element={<Exam/>}/>
-        <Route path="/result" element={<Results/>}/>
-        <Route path = '*' element = {<Navigate to = '/'/>}/>
+        <Route path = '/' element = {isTokenValid() ? <Home/> : <Navigate to = "/login"/>}/>
+        <Route path = '/login' element = {isTokenValid() ? <Navigate to = '/'/> : <Login/>}/>
+        <Route path = '/register' element = {isTokenValid() ? <Navigate to = '/' /> :  <Register/>}/>
+        <Route path="/exam" element={isTokenValid() ? <Exam/> : <Navigate to = "/login"/>}/>
+        <Route path="/result" element={isTokenValid() ? <Results/> : <Navigate to = "/login"/>}/>
+        <Route path = '*' element = {isTokenValid() ? <Navigate to = '/'/> : <Navigate to = '/login'/>}/>
       </Routes>
     </BrowserRouter>
   )
