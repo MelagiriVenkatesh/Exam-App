@@ -32,6 +32,7 @@ async function isTokenValid() {
 
     let isTokenValidUrl = import.meta.env.VITE_TOKEN_API_URL;
     const response = await axios(isTokenValid);
+    console.log(response);
     return response.data.token;
 }
 
