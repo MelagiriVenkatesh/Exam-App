@@ -31,7 +31,7 @@ function Home() {
 async function isTokenValid() {
 
     let token = localStorage.getItem("token");
-    if(!token)
+    if(token == null || token == undefined || token == '' || token == NaN)
       return false;
 
     let isTokenValidUrl = import.meta.env.VITE_TOKEN_API_URL;
