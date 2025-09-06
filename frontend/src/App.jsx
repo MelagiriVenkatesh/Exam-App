@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { checkTokenValidity } from './utils/auth'; // Assuming you created this file
+import { checkTokenValidity } from './auth';
 
 // Import Pages
 import Home from './pages/Home';
