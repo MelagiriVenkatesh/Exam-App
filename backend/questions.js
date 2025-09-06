@@ -7,6 +7,7 @@ const questionRouter = express.Router();
 function authMiddleWare(req, res, next) {
 
     const token = req.header('token');
+    console.log("token: "+token);
     if(!token) 
         return res.status(401).json({message: "token not found", token: false});
 

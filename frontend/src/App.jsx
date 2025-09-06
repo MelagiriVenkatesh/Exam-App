@@ -8,6 +8,23 @@ import { Link } from 'react-router-dom';
 import styles from './pages/Home.module.css';
 import axios from 'axios'
 
+function PublicRoutes({ children }) {
+
+    let token = isTokenValid();
+    if(token)
+      return <Navigate to = "/"/>
+
+    return children;
+}
+
+
+function PrivateRoutes({ children }) {
+
+    let token = isTokenValid();
+    if(!token)
+      return <Navigate to = '/login'/>
+    return children;
+}
 
 function Home() {
 
@@ -28,6 +45,15 @@ function Home() {
   );
 }
 
+function UnknownPathComponent() {
+
+   let token = isTokenValid();
+   if(token)
+      return <Navigate to = "/"/>;
+   else
+      return <Navigate to = "login"/>;
+}
+
 async function isTokenValid() {
 
     let token = localStorage.getItem("token");
@@ -35,7 +61,7 @@ async function isTokenValid() {
       return false;
 
     let isTokenValidUrl = import.meta.env.VITE_TOKEN_API_URL;
-    const response = await axios.get(isTokenValid);
+    const response = await axios.get(isTokenValidUrl);
     console.log(response);
     return response.data.token;
 }
@@ -45,12 +71,12 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path = '/' element = {isTokenValid() ? <Home/> : <Navigate to = "/login"/>}/>
-        <Route path = '/login' element = {isTokenValid() ? <Navigate to = '/'/> : <Login/>}/>
-        <Route path = '/register' element = {isTokenValid() ? <Navigate to = '/' /> :  <Register/>}/>
-        <Route path="/exam" element={isTokenValid() ? <Exam/> : <Navigate to = "/login"/>}/>
-        <Route path="/result" element={isTokenValid() ? <Results/> : <Navigate to = "/login"/>}/>
-        <Route path = '*' element = {isTokenValid() ? <Navigate to = '/'/> : <Navigate to = '/login'/>}/>
+          <Route path = '/login' element = {<PublicRoutes> <Login/> </PublicRoutes>}/>
+          <Route path = '/register' element = {<PublicRoutes> <Register/> </PublicRoutes>}/>
+          <Route path = '/' element = {<PrivateRoutes> <Home/> </PrivateRoutes>}/>
+          <Route path="/exam" element={<PrivateRoutes> <Exam/> </PrivateRoutes>}/>
+          <Route path="/result" element={<PrivateRoutes> <Results/> </PrivateRoutes>}/>
+          <Route path = '*' element = {<UnknownPathComponent/>}/>
       </Routes>
     </BrowserRouter>
   )
