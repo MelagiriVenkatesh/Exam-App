@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
     res.send("Hello World!!!");
 });
 
-app.get('/api/auth/validate-token', (req, res) => {
+app.get('/tokenValid', (req, res) => {
     const authHeader = req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         
