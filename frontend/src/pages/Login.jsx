@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+// CHANGED: useNavigate is no longer needed here
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Auth.module.css';
 
-// CHANGED: Login now receives the `login` function as a prop
 function Login({ login }) {
     const [formData, setFormData] = useState({ email: '', password: '' });
-    const navigate = useNavigate();
-
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -17,13 +16,15 @@ function Login({ login }) {
         try {
             const login_api_url = import.meta.env.VITE_LOGIN_API_URL;
             const response = await axios.post(login_api_url, formData);
-            localStorage.setItem('token', response.data.token);
             
-            // CHANGED: Call the login function from App.js to update the state
-            login();
-
+            localStorage.setItem('token', response.data.token);
             alert('Login successful!');
-            navigate('/');
+            
+            // This now just updates the state. 
+            // The useEffect in App.jsx will handle the redirect.
+            login();
+            
+            // CHANGED: Removed the navigate('/') call from here.
         } catch (error) {
             const errorDetails = error.response?.data?.message || 'An error occurred.';
             alert(`Login Failed: ${errorDetails}`);
