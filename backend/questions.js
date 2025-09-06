@@ -1,66 +1,64 @@
 const express = require('express');
-const {Question} = require('./model');
+const { Question } = require('./model');
 const jwt = require("jsonwebtoken");
 
 const questionRouter = express.Router();
 
 function authMiddleWare(req, res, next) {
+    const authHeader = req.header('Authorization');
 
-    const token = req.header('token');
-    console.log("token: "+token);
-    if(!token) 
-        return res.status(200).json({message: "token not found", token: false});
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: "Access Denied. No token provided." });
+    }
+
+    const token = authHeader.split(' ')[1];
 
     try {
-        const decodedPayload = jwt.verify(token,process.env.JWT_SECRET);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decodedPayload.user;
         next();
-    }
-    catch(error) {
-        res.status(200).json({message: "Token is invalid", token: false});
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid Token." });
     }
 }
 
-
 questionRouter.get('/', authMiddleWare, async (req, res) => {
-
     try {
-        const questions = await Question.aggregate([{$sample: {size: 10 }}, {$project: {correctAnswer:0}}]);
+        const questions = await Question.aggregate([
+            { $sample: { size: 10 } },
+            { $project: { correctAnswer: 0 } }
+        ]);
         res.json(questions);
-    }
-    catch(error) {
-        res.json({message: `something went wrong ${error}`});
+    } catch (error) {
+        console.error(error); // Log error on server
+        res.status(500).json({ message: "Something went wrong fetching questions." }); // Send generic message
     }
 });
 
-
-
 questionRouter.post('/submit', authMiddleWare, async (req, res) => {
-
     try {
-        const {answers} = req.body; 
-        // format and contents of answer will be 
-        // answer = [{questionID: ID, selectedAnswer: answer}, {questionID: ID, selectedAnswer: answer}, ...];
+        const { answers } = req.body;
+        const questionIDs = answers.map(q => q.questionID);
+        const correctAnswers = await Question.find({ _id: { $in: questionIDs } });
 
-        const questionIDs = answers.map(q=>q.questionID);
-        const correctAnswers = await Question.find({ _id : {$in: questionIDs }});
-        
+        // CHANGED: Made score calculation more efficient using a Map
+        const correctAnswersMap = new Map(
+            correctAnswers.map(q => [q._id.toString(), q.correctAnswer])
+        );
+
         let score = 0;
-
         answers.forEach(userAnswer => {
-            const question = correctAnswers.find(q => q._id.toString() === userAnswer.questionID);
-            if (question && question.correctAnswer === userAnswer.selectedAnswer) {
+            const correctAnswer = correctAnswersMap.get(userAnswer.questionID);
+            if (correctAnswer === userAnswer.selectedAnswer) {
                 score++;
             }
         });
 
         res.json({ score, total: correctAnswers.length });
-    }
-    catch(error) {
-        res.status(500).json({ message: `Server error ${error}` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error during submission." });
     }
 });
-
-
 
 module.exports = questionRouter;

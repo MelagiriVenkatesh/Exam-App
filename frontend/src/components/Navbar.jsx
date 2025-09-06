@@ -2,11 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
-const Navbar = () => {
+// CHANGED: Navbar now receives the `logout` function as a prop
+const Navbar = ({ logout }) => {
     const navigate = useNavigate();
+
     const handleLogout = () => {
         localStorage.removeItem('token');
-        sessionStorage.removeItem('examResult'); 
+        sessionStorage.removeItem('examResult');
+        // CHANGED: Call the logout function from App.js to update the state
+        logout();
         navigate('/login');
     };
 

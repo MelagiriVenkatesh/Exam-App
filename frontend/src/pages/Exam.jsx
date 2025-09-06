@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Timer from '../components/Timer';
 import Navbar from '../components/Navbar';
 import styles from './Exam.module.css';
 
-const Exam = () => {
+// CHANGED: The component now accepts the `logout` function as a prop
+const Exam = ({ logout }) => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const questions_api_url = import.meta.env.VITE_EXAM_API_URL; 
-                const response = await axios.get(questions_api_url, { headers: { 'token': token, }, });
+                const questions_api_url = import.meta.env.VITE_EXAM_API_URL;
+                
+                // CHANGED: Using the standard 'Authorization' header
+                const response = await axios.get(questions_api_url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
                 setQuestions(response.data);
             } catch (err) {
                 setError('Failed to fetch questions. Please try again.');
@@ -55,7 +61,14 @@ const Exam = () => {
                 questionID: questionId,
                 selectedAnswer: selectedAnswer
             }));
-            const response = await axios.post(submit_api_url, { answers: formattedAnswers }, { headers: { 'token': token } });
+
+            // CHANGED: Using the standard 'Authorization' header
+            const response = await axios.post(
+                submit_api_url,
+                { answers: formattedAnswers },
+                { headers: { 'Authorization': `Bearer ${token}` } }
+            );
+
             sessionStorage.setItem('examResult', JSON.stringify({ score: response.data.score, total: response.data.total }));
             navigate('/result');
         } catch (err) {
@@ -73,7 +86,8 @@ const Exam = () => {
 
     return (
         <>
-            <Navbar />
+            {/* CHANGED: Passes the logout function to the Navbar */}
+            <Navbar logout={logout} />
             <div className={styles.pageWrapper}>
                 <div className={styles.contentContainer}>
                     <Timer duration={1800} onTimeUp={handleSubmit} />
@@ -85,13 +99,23 @@ const Exam = () => {
                         <div className={styles.optionsContainer}>
                             {currentQuestion.options.map((option, index) => (
                                 <label key={index} className={styles.option}>
-                                    <input type="radio" name={currentQuestion._id} value={option} checked={selectedAnswer === option} onChange={() => handleAnswerSelect(currentQuestion._id, option)} />
+                                    <input
+                                        type="radio"
+                                        name={currentQuestion._id}
+                                        value={option}
+                                        checked={selectedAnswer === option}
+                                        onChange={() => handleAnswerSelect(currentQuestion._id, option)}
+                                    />
                                     {option}
                                 </label>
                             ))}
                         </div>
                         <div className={styles.navigation}>
-                            <button onClick={handlePrevious} disabled={currentQuestionIndex === 0} className={styles.navButton}>
+                            <button
+                                onClick={handlePrevious}
+                                disabled={currentQuestionIndex === 0}
+                                className={styles.navButton}
+                            >
                                 Previous
                             </button>
                             {currentQuestionIndex === questions.length - 1 ? (
